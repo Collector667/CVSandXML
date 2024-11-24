@@ -1,8 +1,9 @@
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -11,21 +12,33 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         String combToExit = "exit";
         String input = null;
-         do {
-             if (input != null) {;
-                 if (input.substring(input.lastIndexOf('.') + 1).equals("csv")) {
-                     HashMap<String, Csv> addresses;
-                     addresses = parseCSV.parse(input);
-                     System.out.println(addresses);
-                 }
-                 else if ((input.substring(input.lastIndexOf('.') + 1).equals("xml"))) {
-                     HashMap<String, ArrayList<Address>> addresses;
-                     addresses = parseXML.parse(input);
-                     System.out.println(addresses.get("Абакан"));
-                 }
-             }
-             System.out.printf("Введите путь до файла или %s для завершения работы\n", combToExit);
-             input = sc.nextLine();
+        String typeOfFile;
+        Date startTime = null;
+        Date endTime;
+        ArrayList<HashMap<String, String>> directory;
+        do {
+            if (input != null) {
+                typeOfFile = input.substring(input.lastIndexOf('.') + 1);
+                if (!new File(input).exists()) {
+                    System.out.println("Файл не найден");
+                }
+                else if (typeOfFile.equals("csv") || typeOfFile.equals("xml")) {
+                    if (typeOfFile.equals("csv")) {
+                        HashMap<String, Csv> addresses;
+                        addresses = parseCSV.parse(input);
+                        System.out.println(addresses);
+                    }
+                    else {
+                        directory = parseXML.parse(input);
+                        System.out.println(directory);
+                    }
+                    endTime = new Date();
+                    System.out.printf("Время работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
+                }
+            }
+            System.out.printf("Введите путь до файла или %s для завершения работы\n", combToExit);
+            input = sc.nextLine();
+            startTime = new Date();
         } while (!input.equals(combToExit));
         sc.close();
     }

@@ -2,10 +2,20 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
+
+class Processing {
+    HashMap<HashMap<String, String>, Integer> directory;
+
+    public Processing(HashMap<HashMap<String, String>, Integer> directory) {
+        this.directory = directory;
+    }
+
+    void outputDuplicates() {
+    }
+}
 
 public class Main {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
@@ -15,7 +25,7 @@ public class Main {
         String typeOfFile;
         Date startTime = null;
         Date endTime;
-        ArrayList<HashMap<String, String>> directory;
+        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory;
         do {
             if (input != null) {
                 typeOfFile = input.substring(input.lastIndexOf('.') + 1);

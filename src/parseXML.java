@@ -15,32 +15,46 @@ public class parseXML {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new File(path));
-        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = new HashMap<>();
         NodeList addressElements = document.getDocumentElement().getElementsByTagName("item");
         NamedNodeMap attributes;
+
+        // словарь <город, адреса>
+        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = new HashMap<>();
+
+        // словарь адреса
         HashMap<String, String> address;
-        String city;
+
+        // словарь <адрес, кол-во повторений>
         HashMap<HashMap<String, String>, Integer> addressesOfCity;
+
+        String city;
+
         for (int i = 0; i < addressElements.getLength(); i++) {
+            // получение атрибутов значения
             attributes = addressElements.item(i).getAttributes();
-            address = new HashMap<>();
+
+            // получение города
             city = attributes.getNamedItem("city").getNodeValue();
+
+            // заполнеие словаря адреса
+            address = new HashMap<>();
             address.put("street", attributes.getNamedItem("street").getNodeValue());
             address.put("house", attributes.getNamedItem("house").getNodeValue());
             address.put("floor", attributes.getNamedItem("floor").getNodeValue());
-            addressesOfCity = directory.get(city);
-            if (addressesOfCity == null) {
-                directory.put(city, new HashMap<>());
-                directory.get(city).put(address, 1);
+
+            // получение словаря <город, адреса> или его создание
+            addressesOfCity = directory.computeIfAbsent(city, k -> new HashMap<>());
+
+            // добавление нового адреса
+            if (addressesOfCity.get(address) == null) {
+                addressesOfCity.put(address, 1);
             }
+
+            // изменение кол-ва повторений
             else {
-                if (addressesOfCity.get(address) == null) {
-                    addressesOfCity.put(address, 1);
-                }
-                else {
-                    addressesOfCity.replace(address, addressesOfCity.get(address) + 1);
-                }
+                addressesOfCity.replace(address, addressesOfCity.get(address) + 1);
             }
+
         }
         return directory;
     }

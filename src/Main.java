@@ -7,13 +7,26 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 class Processing {
-    HashMap<HashMap<String, String>, Integer> directory;
+    HashMap<String, HashMap<HashMap<String, String>, Integer>> directory;
 
-    public Processing(HashMap<HashMap<String, String>, Integer> directory) {
+    Processing(HashMap<String, HashMap<HashMap<String, String>, Integer>> directory) {
         this.directory = directory;
     }
 
     void outputDuplicates() {
+        HashMap<HashMap<String, String>, Integer> addressesOfCity;
+        HashMap<String, String> addressWithCity;
+        for (String city : this.directory.keySet()) {
+            addressesOfCity = this.directory.get(city);
+            for (HashMap<String, String> address : addressesOfCity .keySet()) {
+                if (addressesOfCity.get(address) > 1) {
+                    addressWithCity = (HashMap<String, String>) address.clone();
+                    addressWithCity.put("city", city);
+                    System.out.printf("Запись %s повторяется %d раз(а)\n",
+                            addressWithCity, addressesOfCity.get(address));
+                }
+            }
+        }
     }
 }
 
@@ -25,7 +38,7 @@ public class Main {
         String typeOfFile;
         Date startTime = null;
         Date endTime;
-        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory;
+        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = null;
         do {
             if (input != null) {
                 typeOfFile = input.substring(input.lastIndexOf('.') + 1);
@@ -40,8 +53,8 @@ public class Main {
                     }
                     else {
                         directory = parseXML.parse(input);
-                        System.out.println(directory);
                     }
+                    new Processing(directory).outputDuplicates();
                     endTime = new Date();
                     System.out.printf("Время работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
                 }

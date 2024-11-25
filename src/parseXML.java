@@ -17,11 +17,13 @@ public class parseXML {
         Document document = builder.parse(new File(path));
         HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = new HashMap<>();
         NodeList addressElements = document.getDocumentElement().getElementsByTagName("item");
+        NamedNodeMap attributes;
+        HashMap<String, String> address;
         String city;
         HashMap<HashMap<String, String>, Integer> addressesOfCity;
         for (int i = 0; i < addressElements.getLength(); i++) {
-            NamedNodeMap attributes = addressElements.item(i).getAttributes();
-            HashMap<String, String> address = new HashMap<>();
+            attributes = addressElements.item(i).getAttributes();
+            address = new HashMap<>();
             city = attributes.getNamedItem("city").getNodeValue();
             address.put("street", attributes.getNamedItem("street").getNodeValue());
             address.put("house", attributes.getNamedItem("house").getNodeValue());
@@ -43,4 +45,3 @@ public class parseXML {
         return directory;
     }
 }
-

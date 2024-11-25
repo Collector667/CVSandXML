@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 class Processing {
     HashMap<String, HashMap<HashMap<String, String>, Integer>> directory;
+    int maxNumberOfFloor = 5;
 
     Processing(HashMap<String, HashMap<HashMap<String, String>, Integer>> directory) {
         this.directory = directory;
@@ -25,6 +26,26 @@ class Processing {
                     System.out.printf("Запись %s повторяется %d раз(а)\n",
                             addressWithCity, addressesOfCity.get(address));
                 }
+            }
+        }
+    }
+
+    void countingHouses() {
+        HashMap<HashMap<String, String>, Integer> addressesOfCity;
+        int[] masFloorNumber;
+        masFloorNumber = new int[this.maxNumberOfFloor];
+        for (int i = 0; i < this.maxNumberOfFloor; i++) {
+            masFloorNumber[i] = 0;
+        }
+        for (String city : this.directory.keySet()) {
+            addressesOfCity = this.directory.get(city);
+            for (HashMap<String, String> address : addressesOfCity .keySet()) {
+                masFloorNumber[Integer.parseInt(address.get("floor")) - 1]++;
+            }
+            System.out.printf("В городе %s\n", city);
+            for (int i = 0; i < this.maxNumberOfFloor; i++) {
+                System.out.printf("%d %d-этажных зданий\n", masFloorNumber[i], i + 1);
+                masFloorNumber[i] = 0;
             }
         }
     }
@@ -54,7 +75,9 @@ public class Main {
                     else {
                         directory = parseXML.parse(input);
                     }
-                    new Processing(directory).outputDuplicates();
+                    Processing prcsng = new Processing(directory);
+                    prcsng.outputDuplicates();
+                    prcsng.countingHouses();
                     endTime = new Date();
                     System.out.printf("Время работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
                 }

@@ -3,38 +3,26 @@ import java.util.HashMap;
 import com.opencsv.CSVReader;
 
 public class parseCSV {
-    static HashMap<String, HashMap<HashMap<String, String>, Integer>> parse(String path) {
+    static HashMap<String, HashMap<Address, Integer>> parse(String path) {
         try {
             CSVReader csvReader = new CSVReader(new FileReader(path));
             String[] nextRecord = csvReader.readNext();
-            String[] csvStr;
 
             // словарь <город, адреса>
-            HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = new HashMap<>();
+            HashMap<String, HashMap<Address, Integer>> directory = new HashMap<>();
 
-            // словарь адреса
-            HashMap<String, String> address = null;
-
-            // словарь <адрес, кол-во повторений>
-            HashMap<HashMap<String, String>, Integer> addressesOfCity;
-
-            String city = "";
-
-            while ((nextRecord = csvReader.readNext()) != null) {;
-                csvStr = nextRecord[0].split(";");
+            while ((nextRecord = csvReader.readNext()) != null) {
+                // сторка csv
+                String[] csvStr = nextRecord[0].split(";");
 
                 // получение города
-                city = csvStr[0];
-                city = city.substring(0, city.length() - 1);
+                String city = csvStr[0].substring(0, csvStr[0].length() - 1);;
 
-                // заполнеие словаря адреса
-                address = new HashMap<>();
-                address.put("street", csvStr[1].substring(1, csvStr[1].length() - 1));
-                address.put("house", csvStr[2]);
-                address.put("floor", csvStr[3]);
+                // заполнеие адреса
+                Address address = new Address(csvStr[1].substring(1, csvStr[1].length() - 1), csvStr[2], csvStr[3]);
 
                 // получение словаря <город, адреса> или его создание
-                addressesOfCity = directory.computeIfAbsent(city, k -> new HashMap<>());
+                HashMap<Address, Integer> addressesOfCity = directory.computeIfAbsent(city, k -> new HashMap<>());
 
                 // добавление нового адреса
                 if (addressesOfCity.get(address) == null) {

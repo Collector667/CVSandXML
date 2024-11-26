@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.HashMap;
 import com.opencsv.CSVReader;
 
+
 public class parseCSV {
     static HashMap<String, HashMap<Address, Integer>> parse(String path) {
         try {
@@ -34,6 +35,7 @@ public class parseCSV {
                     addressesOfCity.replace(address, addressesOfCity.get(address) + 1);
                 }
             }
+            csvReader.close();
             return directory;
         }
         catch (Exception e) {

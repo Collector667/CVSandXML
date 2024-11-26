@@ -7,40 +7,32 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 class Processing {
-    HashMap<String, HashMap<HashMap<String, String>, Integer>> directory;
+    HashMap<String, HashMap<Address, Integer>> directory;
     int maxNumberOfFloor = 5;
 
-    Processing(HashMap<String, HashMap<HashMap<String, String>, Integer>> directory) {
+    Processing(HashMap<String, HashMap<Address, Integer>> directory) {
         this.directory = directory;
     }
 
     void outputDuplicates() {
-        HashMap<HashMap<String, String>, Integer> addressesOfCity;
-        HashMap<String, String> addressWithCity;
         for (String city : this.directory.keySet()) {
-            addressesOfCity = this.directory.get(city);
-            for (HashMap<String, String> address : addressesOfCity .keySet()) {
+            HashMap<Address, Integer> addressesOfCity = this.directory.get(city);
+            for (Address address : addressesOfCity .keySet()) {
                 if (addressesOfCity.get(address) > 1) {
-                    addressWithCity = (HashMap<String, String>) address.clone();
-                    addressWithCity.put("city", city);
                     System.out.printf("Запись %s повторяется %d раз(а)\n",
-                            addressWithCity, addressesOfCity.get(address));
+                            address.toString(city), addressesOfCity.get(address));
                 }
             }
         }
     }
 
     void countingHouses() {
-        HashMap<HashMap<String, String>, Integer> addressesOfCity;
         int[] masFloorNumber;
         masFloorNumber = new int[this.maxNumberOfFloor];
-        for (int i = 0; i < this.maxNumberOfFloor; i++) {
-            masFloorNumber[i] = 0;
-        }
         for (String city : this.directory.keySet()) {
-            addressesOfCity = this.directory.get(city);
-            for (HashMap<String, String> address : addressesOfCity .keySet()) {
-                masFloorNumber[Integer.parseInt(address.get("floor")) - 1]++;
+            HashMap<Address, Integer> addressesOfCity = this.directory.get(city);
+            for (Address address : addressesOfCity .keySet()) {
+                masFloorNumber[Integer.parseInt(address.floor) - 1]++;
             }
             System.out.printf("В городе %s\n", city);
             for (int i = 0; i < this.maxNumberOfFloor; i++) {
@@ -56,17 +48,15 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         String combToExit = "exit";
         String input = null;
-        String typeOfFile;
         Date startTime = null;
-        Date endTime;
-        HashMap<String, HashMap<Address, Integer>> directory;
         do {
             if (input != null) {
-                typeOfFile = input.substring(input.lastIndexOf('.') + 1);
+                String typeOfFile = input.substring(input.lastIndexOf('.') + 1);
                 if (!new File(input).exists()) {
                     System.out.println("Файл не найден");
                 }
                 else if (typeOfFile.equals("csv") || typeOfFile.equals("xml")) {
+                    HashMap<String, HashMap<Address, Integer>> directory;
                     if (typeOfFile.equals("csv")) {
                         directory = parseCSV.parse(input);
                     }
@@ -75,8 +65,8 @@ public class Main {
                     }
                     Processing prcsng = new Processing(directory);
                     prcsng.outputDuplicates();
-                    prcsng.countingHouses();
-                    endTime = new Date();
+                    //prcsng.countingHouses();
+                    Date endTime = new Date();
                     System.out.printf("Время работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
                 }
             }

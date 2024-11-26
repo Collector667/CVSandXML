@@ -59,7 +59,7 @@ public class Main {
         String typeOfFile;
         Date startTime = null;
         Date endTime;
-        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = null;
+        HashMap<String, HashMap<Address, Integer>> directory;
         do {
             if (input != null) {
                 typeOfFile = input.substring(input.lastIndexOf('.') + 1);

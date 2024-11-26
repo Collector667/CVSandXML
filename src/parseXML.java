@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class parseXML {
-    static HashMap<String, HashMap<HashMap<String, String>, Integer>> parse(String path)
+    static HashMap<String, CityAddress> parse(String path)
             throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -19,43 +19,45 @@ public class parseXML {
         NamedNodeMap attributes;
 
         // словарь <город, адреса>
-        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = new HashMap<>();
 
+        HashMap<String, CityAddress> addresses = new HashMap<>();
         // словарь адреса
-        HashMap<String, String> address;
 
         // словарь <адрес, кол-во повторений>
-        HashMap<HashMap<String, String>, Integer> addressesOfCity;
 
-        String city;
+
+        String cityname;
 
         for (int i = 0; i < addressElements.getLength(); i++) {
             // получение атрибутов значения
             attributes = addressElements.item(i).getAttributes();
-
+            CityAddress city = null;
+            Address address = null;
             // получение города
-            city = attributes.getNamedItem("city").getNodeValue();
+            cityname = attributes.getNamedItem("city").getNodeValue();
+            String street, house, floor;
 
-            // заполнеие словаря адреса
-            address = new HashMap<>();
-            address.put("street", attributes.getNamedItem("street").getNodeValue());
-            address.put("house", attributes.getNamedItem("house").getNodeValue());
-            address.put("floor", attributes.getNamedItem("floor").getNodeValue());
+            street = attributes.getNamedItem("street").getNodeValue();
+            house = attributes.getNamedItem("house").getNodeValue();
+            floor = attributes.getNamedItem("floor").getNodeValue();
+            address = new Address(street, house, floor);
 
-            // получение словаря <город, адреса> или его создание
-            addressesOfCity = directory.computeIfAbsent(city, k -> new HashMap<>());
 
-            // добавление нового адреса
-            if (addressesOfCity.get(address) == null) {
-                addressesOfCity.put(address, 1);
-            }
-
-            // изменение кол-ва повторений
+            city = new CityAddress();
+            city.addressList.add(address);
+            if (addresses.get(cityname) == null){
+                addresses.put(cityname, city);
+                 }
             else {
-                addressesOfCity.replace(address, addressesOfCity.get(address) + 1);
+                addresses.get(cityname).addressList.add(address);
             }
-
         }
-        return directory;
+
+        for (String key : addresses.keySet()) {
+            addresses.get(key).addressList.sort(new ComparatorStreet());
+            addresses.get(key).addressList.sort(new ComparatorHouse());
+        }
+
+        return addresses;
     }
 }

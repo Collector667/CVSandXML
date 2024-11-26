@@ -8,25 +8,22 @@ import java.util.Objects;
 import java.util.Scanner;
 
 class Processing {
-    HashMap<String,Csv> directory;
-
-    Processing(HashMap<String, Csv> directory) {
+    HashMap<String, CityAddress> directory;
+    Processing(HashMap<String, CityAddress> directory) {
         this.directory = directory;
     }
-
     void outputDuplicates() {
-
-
         for (String city : this.directory.keySet()) {
             int Size = this.directory.get(city).addressList.size();
             for (int i = 0; i < Size-1; i++) {
-                while (Objects.equals(this.directory.get(city).addressList.get(i).street, this.directory.get(city).addressList.get(i + 1).street)) {
+                while (Objects.equals(this.directory.get(city).addressList.get(i).street, this.directory.get(city).addressList.get(i + 1).street)
+                      && Objects.equals(this.directory.get(city).addressList.get(i).house, this.directory.get(city).addressList.get(i+1).house)       ) {
                     this.directory.get(city).addressList.remove(i+1);
                     this.directory.get(city).addressList.get(i).count += 1;
                     Size = Size - 1;
                 }
                 if (this.directory.get(city).addressList.get(i).count != 1) {
-                    System.out.println(city + " " +this.directory.get(city).addressList.get(i).street + " " + this.directory.get(city).addressList.get(i).count);
+                    System.out.printf(city + " " +this.directory.get(city).addressList.get(i).street + " " + this.directory.get(city).addressList.get(i).count);
                 }
             }
         }
@@ -41,9 +38,7 @@ class Processing {
                 k = Integer.parseInt(this.directory.get(city).addressList.get(i).floor);
                 countFloor[k-1] += 1;
             }
-            System.out.println(city + " 1 этаж: " + countFloor[0]
-             + " 2 этажа: " + countFloor[1] + " 3 этажа " + countFloor[2] + " 4 этажа: " + countFloor[3] + " 5 этажей: " + countFloor[4]);
-            countFloor[0] = 0;
+            System.out.printf("Город %s имеет:\n %d одноэтажных зданий\n %d двухэтажный зданий\n %d трехэтажных зданий\n %d четырехэтажных зданий\n %d пятиэтажных зданий", city, countFloor[0], countFloor[1], countFloor[2], countFloor[3], countFloor[4]);
         }
     }
 }
@@ -56,7 +51,6 @@ public class Main {
         String typeOfFile;
         Date startTime = null;
         Date endTime;
-        HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = null;
         do {
             if (input != null) {
                 typeOfFile = input.substring(input.lastIndexOf('.') + 1);
@@ -64,18 +58,17 @@ public class Main {
                     System.out.println("Файл не найден");
                 }
                 else if (typeOfFile.equals("csv") || typeOfFile.equals("xml")) {
-                    HashMap<String, Csv> addresses = null;
+                    HashMap<String, CityAddress> addresses = null;
                     if (typeOfFile.equals("csv")) {
                         addresses = parseCSV.parse(input);
-
                     }
-//                    else {
-//                        //directory = parseXML.parse(input);
-//                    }
+                    else {
+                        addresses = parseXML.parse(input);
+                    }
                     new Processing(addresses).outputDuplicates();
                     new Processing(addresses).countOfhouse();
                     endTime = new Date();
-                    System.out.printf("Время работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
+                    System.out.printf("\nВремя работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
                 }
             }
             System.out.printf("Введите путь до файла или %s для завершения работы\n", combToExit);

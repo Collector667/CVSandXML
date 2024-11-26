@@ -68,9 +68,7 @@ public class Main {
                 }
                 else if (typeOfFile.equals("csv") || typeOfFile.equals("xml")) {
                     if (typeOfFile.equals("csv")) {
-                        HashMap<String, Csv> addresses;
-                        addresses = parseCSV.parse(input);
-                        System.out.println(addresses);
+                        directory = parseCSV.parse(input);
                     }
                     else {
                         directory = parseXML.parse(input);

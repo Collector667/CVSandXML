@@ -1,41 +1,54 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import com.opencsv.CSVReader;
 
-class Csv {
-    List<Address> addressList = new ArrayList<>();
-}
-
 public class parseCSV {
-
-    static HashMap parse(String path) {
+    static HashMap<String, HashMap<HashMap<String, String>, Integer>> parse(String path) {
         try {
             CSVReader csvReader = new CSVReader(new FileReader(path));
-            String[] nextRecord;
-            String[] a = new String[0];
-            HashMap<String, Csv> addresses = new HashMap<>();
+            String[] nextRecord = csvReader.readNext();
+            String[] csvStr;
 
-            while ((nextRecord = csvReader.readNext()) != null) {
-                Address address = null;
-                Csv csv = null;
-                for (String cell : nextRecord) {
-                    a = cell.split(";");
-                    address = new Address(a[1], a[2], a[3]);
+            // словарь <город, адреса>
+            HashMap<String, HashMap<HashMap<String, String>, Integer>> directory = new HashMap<>();
+
+            // словарь адреса
+            HashMap<String, String> address = null;
+
+            // словарь <адрес, кол-во повторений>
+            HashMap<HashMap<String, String>, Integer> addressesOfCity;
+
+            String city = "";
+
+            while ((nextRecord = csvReader.readNext()) != null) {;
+                csvStr = nextRecord[0].split(";");
+
+                // получение города
+                city = csvStr[0];
+                city = city.substring(0, city.length() - 1);
+
+                // заполнеие словаря адреса
+                address = new HashMap<>();
+                address.put("street", csvStr[1].substring(1, csvStr[1].length() - 1));
+                address.put("house", csvStr[2]);
+                address.put("floor", csvStr[3]);
+
+                // получение словаря <город, адреса> или его создание
+                addressesOfCity = directory.computeIfAbsent(city, k -> new HashMap<>());
+
+                // добавление нового адреса
+                if (addressesOfCity.get(address) == null) {
+                    addressesOfCity.put(address, 1);
                 }
-                csv = new Csv();
-                csv.addressList.add(address);
-                if (addresses.get(a[0]) == null){
-                    addresses.put(a[0], csv);}
+
+                // изменение кол-ва повторений
                 else {
-                    addresses.get(a[0]).addressList.add(address);
+                    addressesOfCity.replace(address, addressesOfCity.get(address) + 1);
                 }
             }
-            return addresses;
+            return directory;
         }
         catch (Exception e) {
-
             return null;
         }
     }

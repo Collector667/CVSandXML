@@ -8,12 +8,14 @@ import java.util.Scanner;
 
 class Processing {
     HashMap<String, HashMap<Address, Integer>> directory;
+    // макс кол-во этажей
     int maxNumberOfFloor = 5;
 
     Processing(HashMap<String, HashMap<Address, Integer>> directory) {
         this.directory = directory;
     }
 
+    // вывод дубликатов
     void outputDuplicates() {
         for (String city : this.directory.keySet()) {
             HashMap<Address, Integer> addressesOfCity = this.directory.get(city);
@@ -26,6 +28,7 @@ class Processing {
         }
     }
 
+    // подсчёт домов
     void countingHouses() {
         int[] masFloorNumber;
         masFloorNumber = new int[this.maxNumberOfFloor];
@@ -57,15 +60,17 @@ public class Main {
                 }
                 else if (typeOfFile.equals("csv") || typeOfFile.equals("xml")) {
                     HashMap<String, HashMap<Address, Integer>> directory;
+                    Parser parse = new Parser();
                     if (typeOfFile.equals("csv")) {
-                        directory = parseCSV.parse(input);
+
+                        directory = parse.csv(input);
                     }
                     else {
-                        directory = parseXML.parse(input);
+                        directory = parse.xml(input);
                     }
                     Processing prcsng = new Processing(directory);
                     prcsng.outputDuplicates();
-                    //prcsng.countingHouses();
+                    prcsng.countingHouses();
                     Date endTime = new Date();
                     System.out.printf("Время работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
                 }

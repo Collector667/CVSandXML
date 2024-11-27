@@ -27,13 +27,12 @@ class Address {
         Address anotherAddress = (Address) obj;
 
         return CharSequence.compare(this.street, anotherAddress.street) == 0
-                && CharSequence.compare(this.house, anotherAddress.house) == 0
-                && CharSequence.compare(this.floor, anotherAddress.floor) == 0;
+                && CharSequence.compare(this.house, anotherAddress.house) == 0;
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.street, this.house, this.floor);
+        return Objects.hash(this.street, this.house);
     }
 }

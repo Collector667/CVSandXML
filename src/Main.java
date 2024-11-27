@@ -38,7 +38,7 @@ class Processing {
                 k = Integer.parseInt(this.directory.get(city).addressList.get(i).floor);
                 countFloor[k-1] += 1;
             }
-            System.out.printf("Город %s имеет:\n %d одноэтажных зданий\n %d двухэтажный зданий\n %d трехэтажных зданий\n %d четырехэтажных зданий\n %d пятиэтажных зданий", city, countFloor[0], countFloor[1], countFloor[2], countFloor[3], countFloor[4]);
+            System.out.printf("\nГород %s имеет:\n %d одноэтажных зданий\n %d двухэтажный зданий\n %d трехэтажных зданий\n %d четырехэтажных зданий\n %d пятиэтажных зданий", city, countFloor[0], countFloor[1], countFloor[2], countFloor[3], countFloor[4]);
         }
     }
 }
@@ -60,10 +60,10 @@ public class Main {
                 else if (typeOfFile.equals("csv") || typeOfFile.equals("xml")) {
                     HashMap<String, CityAddress> addresses = null;
                     if (typeOfFile.equals("csv")) {
-                        addresses = parseCSV.parse(input);
+                        addresses = parse.CSV(input);
                     }
                     else {
-                        addresses = parseXML.parse(input);
+                        addresses = parse.XML(input);
                     }
                     new Processing(addresses).outputDuplicates();
                     new Processing(addresses).countOfhouse();

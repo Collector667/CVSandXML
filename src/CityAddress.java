@@ -10,18 +10,18 @@ class Address  {
         this.house=house;
         this.floor=floor;
     }
-}
-class ComparatorStreet implements Comparator<Address> {
-    @Override
-    public int compare(Address o1, Address o2) {
-        return CharSequence.compare(o1.street  , o2.street );
+    public String getStreet(){
+        return street;
+    }
+    public String getHouse(){
+        return house;
     }
 }
-class ComparatorHouse implements Comparator<Address> {
-    @Override
-    public int compare(Address o1, Address o2) {
-        return CharSequence.compare(o1.house  , o2.house );
-    }
+
+class PersonComparators {
+    public static final Comparator<Address> BY_Street_AND_House = Comparator
+            .comparing(Address::getStreet)
+            .thenComparing(Address::getHouse);
 }
 class CityAddress {
     List<Address> addressList = new ArrayList<>();

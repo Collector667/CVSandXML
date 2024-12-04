@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
+//Класс адресса
 class Address  {
     public String street, house, floor;
     int count = 1;
@@ -17,12 +17,13 @@ class Address  {
         return house;
     }
 }
-
+//класс для сортировки по двум параметрам
 class PersonComparators {
     public static final Comparator<Address> BY_Street_AND_House = Comparator
             .comparing(Address::getStreet)
             .thenComparing(Address::getHouse);
 }
+//класс списка адрресов города
 class CityAddress {
     List<Address> addressList = new ArrayList<>();
 }

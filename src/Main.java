@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
+
 class Processing {
     HashMap<String, CityAddress> directory;
     Processing(HashMap<String, CityAddress> directory) {
         this.directory = directory;
     }
+    //класс вывода дубликатов
     void outputDuplicates() {
         for (String city : this.directory.keySet()) {
             int Size = this.directory.get(city).addressList.size();
@@ -28,12 +30,13 @@ class Processing {
             }
         }
     }
-    void countOfhouse() {
+    //класс подсчета домов
+    void countOfHouse() {
 
         for (String city : this.directory.keySet()) {
             int[] countFloor = {0, 0, 0, 0, 0};
             int Size = this.directory.get(city).addressList.size();
-            int k = 0;
+            int k;
             for (int i = 0; i < Size; i++) {
                 k = Integer.parseInt(this.directory.get(city).addressList.get(i).floor);
                 countFloor[k-1] += 1;
@@ -52,13 +55,14 @@ public class Main {
         Date startTime = null;
         Date endTime;
         do {
+            //Ввод пути файла
             if (input != null) {
                 typeOfFile = input.substring(input.lastIndexOf('.') + 1);
                 if (!new File(input).exists()) {
                     System.out.println("Файл не найден");
                 }
                 else if (typeOfFile.equals("csv") || typeOfFile.equals("xml")) {
-                    HashMap<String, CityAddress> addresses = null;
+                    HashMap<String, CityAddress> addresses;
                     if (typeOfFile.equals("csv")) {
                         addresses = parse.CSV(input);
                     }
@@ -66,7 +70,7 @@ public class Main {
                         addresses = parse.XML(input);
                     }
                     new Processing(addresses).outputDuplicates();
-                    new Processing(addresses).countOfhouse();
+                    new Processing(addresses).countOfHouse();
                     endTime = new Date();
                     System.out.printf("\nВремя работы: %d мc\n", (endTime.getTime() - startTime.getTime()));
                 }

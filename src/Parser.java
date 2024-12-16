@@ -22,16 +22,16 @@ public class Parser {
     HashMap<String, HashMap<Address, Integer>> csv(String path) {
         try {
             CSVReader csvReader = new CSVReader(new FileReader(path));
-            String[] nextRecord = csvReader.readNext();
-
+            csvReader.readNext();
+            String[] nextRecord;
             while ((nextRecord = csvReader.readNext()) != null) {
-                // сторка csv
+                // строка csv
                 String[] csvStr = nextRecord[0].split(";");
 
                 // получение города
-                String city = csvStr[0].substring(0, csvStr[0].length() - 1);;
+                String city = csvStr[0].substring(0, csvStr[0].length() - 1);
 
-                // заполнеие адреса
+                // заполнение адреса
                 Address address = new Address(csvStr[1].substring(1, csvStr[1].length() - 1), csvStr[2], csvStr[3]);
 
                 // добавление адреса
@@ -59,7 +59,7 @@ public class Parser {
             // получение города
             String city = attributes.getNamedItem("city").getNodeValue();
 
-            // заполнеие адреса
+            // заполнение адреса
             Address address = new Address(attributes.getNamedItem("street").getNodeValue(),
                     attributes.getNamedItem("house").getNodeValue(),
                     attributes.getNamedItem("floor").getNodeValue());

@@ -18,6 +18,7 @@ public class Parser {
     public Parser() {
         this.directory = new HashMap<>();
     }
+
     HashMap<String, HashMap<Address, Integer>> csv(String path) {
         try {
             CSVReader csvReader = new CSVReader(new FileReader(path));
@@ -82,5 +83,4 @@ public class Parser {
             addressesOfCity.replace(address, addressesOfCity.get(address) + 1);
         }
     }
-
 }
